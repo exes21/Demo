@@ -8,6 +8,9 @@ using Android.Widget;
 using App1.Resources.controller;
 using Plugin.Geolocator.Abstractions;
 using Newtonsoft.Json;
+using System.Net;
+using System.IO;
+
 namespace App1.Resources.controller
 
 {
@@ -62,7 +65,7 @@ public class services1 : Service
             try
             {
                 timer = new System.Timers.Timer();
-                timer.Interval = 5000;
+                timer.Interval = 2000;
                 timer.Elapsed += OnTimedEvent;
                 timer.Enabled = true;
                 timer.Start();
@@ -86,11 +89,46 @@ public class services1 : Service
         private async void ejecutarhilo()
         {
                 geo _geo = new geo();
-                DataService _ServiceData = new DataService();
-                TodoItem _TodoItem = new TodoItem();
                 Position _position = await _geo.GetPosition();
+            //    DataService _ServiceData = new DataService();
+            TodoItem _TodoItem = new TodoItem()
+           {
+                lat = (Double)_position.Latitude,
+                lng = (Double)_position.Longitude,
+
+
+            };
+            //_TodoItem.lat.set = _position.Altitude.ToString();
+
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://hookb.in/qBxP66YDp0SLBj3NpbPJ");
+
+            httpWebRequest.ContentType = "application/json"; //tipo de archivo que contiene o MIME
+            httpWebRequest.Method = "POST"; //METODO
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = JsonConvert.SerializeObject(_TodoItem); 
+
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+            }
+
+
+            //-----------------------------------
+
+
+
             Console.WriteLine(_position.Altitude.ToString() +"," + _position.Longitude.ToString());
-                await _ServiceData.AddTodoItemAsync(_TodoItem);
+             // await _ServiceData.AddTodoItemAsync(_TodoItem);
         }
 
 

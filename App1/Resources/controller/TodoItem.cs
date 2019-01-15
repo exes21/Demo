@@ -14,6 +14,7 @@ namespace App1.Resources.controller
 {
     class TodoItem
     {
+        
         public double lat { get; set; }
         public double lng { get; set; }
     }

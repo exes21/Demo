@@ -44,16 +44,17 @@ namespace App1
             button.Click += Button_click;
 
 
+
         }
 
         private void Button_click(object sender, EventArgs e)
         {
            
-            //Thread hiloprincipal = new Thread(new ThreadStart(hilo2))
-            //{
-            //    IsBackground = true
-            //};
-            //hiloprincipal.Start();
+            Thread hiloprincipal = new Thread(new ThreadStart(hilo2))
+            {
+                IsBackground = true
+            };
+            hiloprincipal.Start();
         }
 
 
